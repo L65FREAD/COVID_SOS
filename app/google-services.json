@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "520087089262",
+    "project_id": "be-a-donor-7b2d3",
+    "storage_bucket": "be-a-donor-7b2d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520087089262:android:41b9a4406aef3b86a1367f",
+        "android_client_info": {
+          "package_name": "org.pasaacademy.beadonor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "520087089262-3o25lddv04qen3n6ksovk63arf2vrit6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtf7Cx3qX1MjOv7KAAqI6ldUV-zbKMwmI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "520087089262-3o25lddv04qen3n6ksovk63arf2vrit6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

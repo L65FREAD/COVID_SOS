@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">COVID-SOS</string>
+    <string name="volunteer_login">Volunteer Login</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="volunteer_login1">Volunteer Login ➜</string>
+</resources>

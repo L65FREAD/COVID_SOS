@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_beds"
+        android:icon="@drawable/ic_baseline_local_hospital_24"
+        android:title="Beds" />
+    <item
+        android:id="@+id/nav_hotline"
+        android:icon="@drawable/ic_call"
+        android:title="Hotline" />
+</menu>
