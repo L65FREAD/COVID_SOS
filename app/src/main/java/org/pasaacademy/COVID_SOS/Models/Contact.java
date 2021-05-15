@@ -4,14 +4,16 @@ public class Contact {
 
     private String contactName;
     private String contactNumber;
+    private String location;
 
     public Contact() {
 
     }
 
-    public Contact(String contactName, String contactNumber) {
+    public Contact(String contactName, String contactNumber, String location) {
         this.contactName = contactName;
         this.contactNumber = contactNumber;
+        this.location =location;
     }
 
     public String getContactName() {
@@ -28,5 +30,13 @@ public class Contact {
 
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

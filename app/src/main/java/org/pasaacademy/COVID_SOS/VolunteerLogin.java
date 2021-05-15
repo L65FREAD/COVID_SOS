@@ -12,24 +12,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import org.pasaacademy.COVID_SOS.Models.HospitalModel;
 import org.pasaacademy.COVID_SOS.databinding.ActivityVolunteerLoginBinding;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 
 public class VolunteerLogin extends AppCompatActivity {
 
+    FirebaseDatabase database;
+
     ActivityVolunteerLoginBinding binding;
-    FirebaseAuth auth;
     ProgressDialog progressDialog;
 
-    private String email = " ", password = " ";
+    private static final String PASSWORD_STARTING = "=WCy7P";
+    private boolean debounce = true;
+
+    private String name = "", password = "", actualPassword = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +40,13 @@ public class VolunteerLogin extends AppCompatActivity {
         binding = ActivityVolunteerLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if (userIsLoggedIn()) {
+        if (!debounce) {
             Intent intent = new Intent(getApplicationContext(), VolunteerDashboard.class);
             startActivity(intent);
             finish();
         }
 
-        auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
         progressDialog = new ProgressDialog(VolunteerLogin.this);
 
         getSupportActionBar().hide();
@@ -52,7 +55,7 @@ public class VolunteerLogin extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                email = binding.email.getEditText().getText().toString();
+                name = binding.email.getEditText().getText().toString();
                 password = binding.password.getEditText().getText().toString();
 
                 if (loginUser()) {
@@ -61,21 +64,46 @@ public class VolunteerLogin extends AppCompatActivity {
                     progressDialog.setCanceledOnTouchOutside(false);
                     progressDialog.show();
 
-                    auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    database.getReference().child("Hospitals").addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                progressDialog.dismiss();
-                                Toast.makeText(VolunteerLogin.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), VolunteerDashboard.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                Toast.makeText(VolunteerLogin.this, "Couldn't Log In.", Toast.LENGTH_SHORT).show();
-                                progressDialog.dismiss();
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            int i = 0;
+                            for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                                HospitalModel hospital = snapshot1.getValue(HospitalModel.class);
+                                if (hospital.getHospitalName().equalsIgnoreCase(name)) {
+                                    StringBuilder sb = new StringBuilder(hospital.getContactNumber());
+                                    actualPassword = PASSWORD_STARTING + sb.reverse();
+                                    actualPassword = actualPassword.substring(0, 8);
+                                    if (password.equals(actualPassword)) {
+                                        progressDialog.hide();
+
+                                        debounce = true;
+                                        Intent intent = new Intent(getApplicationContext(), VolunteerDashboard.class);
+                                        intent.putExtra("position", i);
+                                        intent.putExtra("name", hospital.getHospitalName());
+                                        intent.setFlags(FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        progressDialog.hide();
+                                        binding.password.setError("Invalid Username");
+                                    }
+                                } else {
+                                    progressDialog.hide();
+                                    binding.email.setError("Invalid Password");
+
+                                }
+                                i++;
                             }
                         }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
                     });
+
+
                 } else {
                     Toast.makeText(VolunteerLogin.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
                 }
@@ -96,22 +124,13 @@ public class VolunteerLogin extends AppCompatActivity {
     }
 
     private boolean validEmail() {
-        String regex = "^(.+)@(.+)$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
-
-        if (email.isEmpty()) {
-            binding.email.setError("Invalid Email");
-            return false;
-
-        } else if (!matcher.matches()) {
-            binding.email.setError("Invalid Email");
+        if (name.isEmpty()) {
+            binding.email.setError("Invalid Username");
             return false;
         } else {
             binding.email.setError(null);
             binding.email.setErrorEnabled(false);
             return true;
-
         }
 
     }
@@ -139,12 +158,5 @@ public class VolunteerLogin extends AppCompatActivity {
         return true;
     }
 
-    private boolean userIsLoggedIn() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            return true;
-        }
-        return false;
-    }
 
 }

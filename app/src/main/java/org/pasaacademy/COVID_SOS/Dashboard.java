@@ -18,7 +18,8 @@ import org.pasaacademy.COVID_SOS.Fragments.Hotline;
 public class Dashboard extends AppCompatActivity {
 
     ActivityDashboardBinding binding;
-    boolean debounce;
+    boolean debounce, rebound;
+    String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +27,10 @@ public class Dashboard extends AppCompatActivity {
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
+        location = getIntent().getStringExtra("Location");
 
         debounce = true;
+        rebound = true;
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         openFragment(Beds.newInstance("", ""));
@@ -46,13 +49,19 @@ public class Dashboard extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.nav_beds:
+                            if (rebound) {
+                                Toast.makeText(Dashboard.this, "Hospitals may take time to load.", Toast.LENGTH_SHORT).show();
+                                rebound = false;
+                            }
                             openFragment(Beds.newInstance("", ""));
+                            Beds.location = location;
                             return true;
                         case R.id.nav_hotline:
                             if (debounce) {
                                 Toast.makeText(Dashboard.this, "Please Wait!", Toast.LENGTH_SHORT).show();
                                 debounce = false;
                             }
+                            Hotline.location = location;
                             openFragment(Hotline.newInstance("", ""));
                             return true;
                     }

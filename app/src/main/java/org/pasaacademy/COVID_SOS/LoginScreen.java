@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import org.pasaacademy.COVID_SOS.databinding.ActivityLoginScreenBinding;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+
 public class LoginScreen extends AppCompatActivity {
 
     ActivityLoginScreenBinding binding;
@@ -30,9 +32,9 @@ public class LoginScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkConnection()) {
-                    Intent intent = new Intent(getApplicationContext(), Dashboard.class);
+                    Intent intent = new Intent(getApplicationContext(), SelectLocation.class);
+                    intent.setFlags(FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    finish();
                 } else {
                     Toast.makeText(LoginScreen.this, "Internet Connection Required", Toast.LENGTH_SHORT).show();
                 }
@@ -45,8 +47,10 @@ public class LoginScreen extends AppCompatActivity {
             public void onClick(View v) {
                 if (checkConnection()) {
                     Intent intent = new Intent(getApplicationContext(), VolunteerLogin.class);
+
+                    intent.setFlags(FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    finish();
+
                 } else {
                     Toast.makeText(LoginScreen.this, "Internet Connection Required", Toast.LENGTH_SHORT).show();
                 }

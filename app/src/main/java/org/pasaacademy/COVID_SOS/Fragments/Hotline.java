@@ -37,7 +37,7 @@ import java.util.ArrayList;
  */
 public class Hotline extends Fragment implements HotlineNumbersAdapter.OnContactListner {
 
-    FragmentHotlineBinding binding;
+    public static String location;
 
     ArrayList<Contact> contacts;
     HotlineNumbersAdapter adapter;
@@ -107,16 +107,18 @@ public class Hotline extends Fragment implements HotlineNumbersAdapter.OnContact
         contacts = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
 
-        adapter = new HotlineNumbersAdapter(getActivity(), contacts,this);
+        adapter = new HotlineNumbersAdapter(getActivity(), contacts, this);
         recyclerView.setAdapter(adapter);
 
         database.getReference().child("Contacts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 contacts.clear();
-                for (DataSnapshot snapshot1 :snapshot.getChildren()){
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     Contact contact = snapshot1.getValue(Contact.class);
-                    contacts.add(contact);
+                    if (contact.getLocation().equalsIgnoreCase(location)) {
+                        contacts.add(contact);
+                    }
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -136,13 +138,13 @@ public class Hotline extends Fragment implements HotlineNumbersAdapter.OnContact
         makePhoneCall(phoneNumber);
     }
 
-    public void makePhoneCall(String number){
+    public void makePhoneCall(String number) {
         if (ContextCompat.checkSelfPermission(getContext(),
-                Manifest.permission.CALL_PHONE)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.CALL_PHONE}, REQUEST_CALL);
+                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
 
         } else {
-            String dial = "tel:" +number;
+            String dial = "tel:" + number;
             startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
         }
     }

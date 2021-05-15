@@ -3,5 +3,36 @@
     <string name="volunteer_login">Volunteer Login</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="volunteer_login1">Volunteer Login ➜</string>
+    <string name="volunteer_login1">Admin Login ➜</string>
+    <string name="continue_to_app">Continue to App</string>
+    <string name="app_logo">App Logo</string>
+    <string-array name="Cities">
+        <item>Kathmandu</item>
+        <item>Kaski</item>
+        <item>Lalitpur</item>
+        <item>Bhaktapur</item>
+    </string-array>
+    <string-array name="numbers">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>15+</item>
+    </string-array>
+    <string-array name="bool">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
 </resources>
