@@ -81,6 +81,7 @@ public class VolunteerLogin extends AppCompatActivity {
                                         Intent intent = new Intent(getApplicationContext(), VolunteerDashboard.class);
                                         intent.putExtra("position", i);
                                         intent.putExtra("name", hospital.getHospitalName());
+                                        intent.putExtra("time",hospital.getLastUpdated());
                                         intent.setFlags(FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                         finish();

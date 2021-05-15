@@ -23,6 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 import org.pasaacademy.COVID_SOS.Models.HospitalModel;
 import org.pasaacademy.COVID_SOS.databinding.ActivityVolunteerDashboardBinding;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
@@ -65,83 +68,93 @@ public class VolunteerDashboard extends AppCompatActivity {
 
         String name = getIntent().getStringExtra("name");
         hospitalName = getIntent().getIntExtra("position", 0);
+        String lastUpdate = getIntent().getStringExtra("time");
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+        Date d = null;
+        try {
+            d = dateFormat.parse(lastUpdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long timeMilli = d.getTime();
+
 
         binding.hospitalName.setText(name);
 
         binding.submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //update the data
-                availableBeds = binding.availableBeds.getText().toString();
-                availableICU = binding.availableICU.getText().toString();
-                availableVentilators = binding.availableVentilators.getText().toString();
-                oxygenAvailable = binding.availableOxygen.getText().toString();
-                patientsAccepting = binding.patientsAccepting.getText().toString();
-                volunteerName = binding.inputName.getEditText().getText().toString();
 
-                //getting the time
-                Date currentTime = Calendar.getInstance().getTime();
-                String time = currentTime.toString();
-                char ch;
-                int whiteSpaceCount = 0;
-                int startPosition = 0;
-                for (int i = 0; i < time.length(); i++) {
-                    if (whiteSpaceCount == 3) {
-                        startPosition = i;
-                        break;
+                if (timeMilli + 10000 >= System.currentTimeMillis()) {
+
+                    //update the data
+                    availableBeds = binding.availableBeds.getText().toString();
+                    availableICU = binding.availableICU.getText().toString();
+                    availableVentilators = binding.availableVentilators.getText().toString();
+                    oxygenAvailable = binding.availableOxygen.getText().toString();
+                    patientsAccepting = binding.patientsAccepting.getText().toString();
+                    volunteerName = binding.inputName.getEditText().getText().toString();
+
+                    //getting the time
+                    Date currentTime = Calendar.getInstance().getTime();
+                    String time = currentTime.toString();
+                    char ch;
+                    int whiteSpaceCount = 0;
+                    int startPosition = 0;
+                    for (int i = 0; i < time.length(); i++) {
+                        if (whiteSpaceCount == 3) {
+                            startPosition = i;
+                            break;
+                        }
+                        ch = time.charAt(i);
+                        if (Character.isWhitespace(ch)) {
+                            whiteSpaceCount++;
+                        }
                     }
-                    ch = time.charAt(i);
-                    if (Character.isWhitespace(ch)) {
-                        whiteSpaceCount++;
+                    String actualTime = time.substring(startPosition, startPosition + 8);
+
+
+                    long beds, icu, ventilators;
+                    boolean oxy, patien;
+
+                    if (validateVolunteerName()) {
+
+                        //send reminder in two hours
+                        setReminder();
+
+                        if (availableBeds.equals("15+")) {
+                            beds = 16;
+                        } else {
+                            beds = Long.parseLong(availableBeds);
+                            reference.child(hospitalName + "").child("availableBeds").setValue(beds);
+                        }
+
+                        if (availableVentilators.equals("15+")) {
+                            ventilators = 16;
+                        } else {
+                            ventilators = Long.parseLong(availableBeds);
+                            reference.child(hospitalName + "").child("availableVentilators").setValue(ventilators);
+                        }
+
+                        if (availableICU.equals("15+")) {
+                            icu = 16;
+                        } else {
+                            icu = Long.parseLong(availableBeds);
+                            reference.child(hospitalName + "").child("availableICU").setValue(icu);
+                        }
+
+                        oxy = oxygenAvailable.equalsIgnoreCase("Yes");
+
+                        patien = patientsAccepting.equalsIgnoreCase("Yes");
+
+                        reference.child(hospitalName + "").child("acceptingPatients").setValue(patien);
+                        reference.child(hospitalName + "").child("oxygenAvailable").setValue(oxy);
+                        reference.child(hospitalName + "").child("lastUpdated").setValue(actualTime);
+
                     }
+                }else {
+                    Toast.makeText(VolunteerDashboard.this, "Wait before you update again!", Toast.LENGTH_SHORT).show();
                 }
-                String actualTime = time.substring(startPosition, startPosition + 8);
-
-
-                long beds, icu, ventilators;
-                boolean oxy, patien;
-
-                if (validateVolunteerName()) {
-
-                    //send reminder in two hours
-                    setReminder();
-
-                    if (availableBeds.equals("15+")) {
-                        beds = 16;
-                    } else {
-                        beds = Long.parseLong(availableBeds);
-                        reference.child(hospitalName + "").child("availableBeds").setValue(beds);
-                    }
-
-                    if (availableVentilators.equals("15+")) {
-                        ventilators = 16;
-                    } else {
-                        ventilators = Long.parseLong(availableBeds);
-                        reference.child(hospitalName + "").child("availableVentilators").setValue(ventilators);
-                    }
-
-                    if (availableICU.equals("15+")) {
-                        icu = 16;
-                    } else {
-                        icu = Long.parseLong(availableBeds);
-                        reference.child(hospitalName + "").child("availableICU").setValue(icu);
-                    }
-
-                    oxy = oxygenAvailable.equalsIgnoreCase("Yes");
-
-                    patien = patientsAccepting.equalsIgnoreCase("Yes");
-
-                    reference.child(hospitalName + "").child("acceptingPatients").setValue(patien);
-                    reference.child(hospitalName + "").child("oxygenAvailable").setValue(oxy);
-                    reference.child(hospitalName + "").child("lastUpdated").setValue(actualTime);
-
-                    Intent intent = new Intent(getApplicationContext(), LoginScreen.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
-                }
-
             }
         });
 
