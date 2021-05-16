@@ -29,7 +29,7 @@ public class VolunteerLogin extends AppCompatActivity {
     ActivityVolunteerLoginBinding binding;
     ProgressDialog progressDialog;
 
-    private static final String PASSWORD_STARTING = "=WCy7P";
+    private static final String PASSWORD_STARTING = "=WCyP";
     private boolean debounce = true;
 
     private String name = "", password = "", actualPassword = "";
@@ -71,12 +71,17 @@ public class VolunteerLogin extends AppCompatActivity {
                             for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                                 HospitalModel hospital = snapshot1.getValue(HospitalModel.class);
                                 if (hospital.getHospitalName().equalsIgnoreCase(name)) {
-                                    StringBuilder sb = new StringBuilder(hospital.getContactNumber());
-                                    actualPassword = PASSWORD_STARTING + sb.reverse();
-                                    actualPassword = actualPassword.substring(0, 8);
+
+                                    //generating user password
+                                    StringBuilder sb = new StringBuilder(hospital.getHospitalName());
+                                    String passwordName = PASSWORD_STARTING + sb.reverse();
+                                    actualPassword = actualPassword.hashCode() + passwordName;
+                                    actualPassword = actualPassword.substring(0, 12);
+
                                     if (password.equals(actualPassword)) {
                                         progressDialog.hide();
 
+                                        //putting extra items in intent to dashboard (login was successful)
                                         debounce = true;
                                         Intent intent = new Intent(getApplicationContext(), VolunteerDashboard.class);
                                         intent.putExtra("position", i);
@@ -85,6 +90,7 @@ public class VolunteerLogin extends AppCompatActivity {
                                         intent.setFlags(FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                         finish();
+
                                     } else {
                                         progressDialog.hide();
                                         binding.password.setError("Invalid Username");

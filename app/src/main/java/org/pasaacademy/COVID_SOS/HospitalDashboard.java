@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import org.pasaacademy.COVID_SOS.databinding.ActivityHospitalDashboardBinding;
 
+import java.util.Objects;
+
 public class HospitalDashboard extends AppCompatActivity {
 
     ActivityHospitalDashboardBinding binding;
@@ -39,8 +41,9 @@ public class HospitalDashboard extends AppCompatActivity {
         binding = ActivityHospitalDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
+        //get all the data from the intent and change
         hospitalName = getIntent().getStringExtra("name");
         hospitalAddress = getIntent().getStringExtra("address");
         contactNumber = getIntent().getStringExtra("number");
@@ -52,6 +55,7 @@ public class HospitalDashboard extends AppCompatActivity {
         icuAvailable = getIntent().getStringExtra("icuAvailable");
         ventilatorAvailable = getIntent().getStringExtra("ventilatorAvailable");
 
+        //replace the data for the hospitals in the dashboard
         binding.nameHospital.setText(hospitalName);
         binding.addressHospital.setText(hospitalAddress);
         binding.acceptingPatients.setText("Accepting Patients :" + acceptingPatients);

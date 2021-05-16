@@ -1,5 +1,9 @@
 package org.pasaacademy.COVID_SOS.Models;
 
+/**
+ * model call for contact to use on the database
+ */
+
 public class Contact {
 
     private String contactName;

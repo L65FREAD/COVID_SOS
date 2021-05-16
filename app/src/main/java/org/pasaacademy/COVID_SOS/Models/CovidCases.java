@@ -1,5 +1,8 @@
 package org.pasaacademy.COVID_SOS.Models;
 
+/**
+ * Model class for the covid cases database
+ */
 public class CovidCases {
     String activeCases, lastUpdated, recoveredCases, totalCases;
 

@@ -1,5 +1,8 @@
 package org.pasaacademy.COVID_SOS.Models;
 
+/**
+ * Model class for the hospital database
+ */
 public class HospitalModel {
     private String hospitalName, hospitalAddress, contactNumber, lastUpdated, location;
     private long availableBeds, icuAvailable, ventilatorAvailable;

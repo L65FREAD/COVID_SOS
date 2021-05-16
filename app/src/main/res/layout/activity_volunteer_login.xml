@@ -13,7 +13,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="80dp"
         android:fontFamily="@font/comicsansms3"
-        android:text="@string/volunteer_login"
+        android:text="Hospital Login"
         android:textColor="@color/black"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,8 +61,6 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
         <Button
             android:id="@+id/login"
             android:layout_marginTop="40dp"
@@ -71,6 +69,7 @@
             android:background="@drawable/custom_button"
             android:text="Log In"
             android:textColor="@color/white" />
+
 
 
     </LinearLayout>

@@ -24,18 +24,22 @@ public class SplashScreen extends AppCompatActivity {
         activitySplashScreenBinding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
         setContentView(activitySplashScreenBinding.getRoot());
 
-       getSupportActionBar().hide();
+        //hiding the action bar
+        getSupportActionBar().hide();
 
         //Going to the next screen with a delayed time
         //The pairs sends the data about the logo, so there is an animation to fit it in the login screen
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+                //Creating a new intent to go to the main screen with share animation for the logo
                 Intent goToDashboard = new Intent(SplashScreen.this, LoginScreen.class );
                 Pair pairs = new Pair<View,String>(activitySplashScreenBinding.logo,"logo");
                 ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(SplashScreen.this, pairs);
                 startActivity(goToDashboard,activityOptions.toBundle());
                 finish();
+
             }
         },SPLASH_SCREEN);
     }

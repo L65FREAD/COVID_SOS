@@ -20,9 +20,6 @@ public class HotlineNumbersAdapter extends RecyclerView.Adapter<HotlineNumbersAd
     ArrayList<Contact> contacts;
     private OnContactListner onContactListner;
 
-    String phoneNumber;
-
-
     public HotlineNumbersAdapter(Context context, ArrayList<Contact> contacts, OnContactListner onContactListner){
         this.context = context;
         this.contacts = contacts;
@@ -37,6 +34,7 @@ public class HotlineNumbersAdapter extends RecyclerView.Adapter<HotlineNumbersAd
         return new HotlineViewHolder(view, onContactListner);
     }
 
+    //Alter the content on the layout
     @Override
     public void onBindViewHolder(@NonNull HotlineNumbersAdapter.HotlineViewHolder holder, int position) {
         Contact contact = contacts.get(position);
@@ -68,6 +66,7 @@ public class HotlineNumbersAdapter extends RecyclerView.Adapter<HotlineNumbersAd
         }
     }
 
+    //listens for click on the recycler view and returns the position
     public interface OnContactListner{
         void onContactClick(int position);
     }

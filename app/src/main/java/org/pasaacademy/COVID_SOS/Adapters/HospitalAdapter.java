@@ -67,6 +67,7 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.Hospit
 
     }
 
+    //detects the click on the recycler items and sends the positiion as a parameter
     public interface onHospitalClick {
         void onHospitalClick(int position);
     }

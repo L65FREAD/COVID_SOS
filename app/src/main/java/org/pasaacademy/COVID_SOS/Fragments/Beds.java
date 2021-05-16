@@ -39,11 +39,8 @@ public class Beds extends Fragment implements HospitalAdapter.onHospitalClick {
 
     private FirebaseDatabase database;
     public static String location;
-    private HospitalRecyclerLayoutBinding binding;
 
     ArrayList<HospitalModel> hospitals  = new ArrayList<>();
-
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -100,6 +97,7 @@ public class Beds extends Fragment implements HospitalAdapter.onHospitalClick {
 
 
         //Handles the COVID-Stats part
+        //Gets the data from the database and updates it to the layout
         TextView activeCases = view.findViewById(R.id.activeCases);
         TextView recoveredCases = view.findViewById(R.id.recoveredCases);
         TextView totalCases = view.findViewById(R.id.totalCases);
@@ -137,6 +135,7 @@ public class Beds extends Fragment implements HospitalAdapter.onHospitalClick {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     HospitalModel hospital = snapshot1.getValue(HospitalModel.class);
+                    assert hospital != null;
                     if (hospital.getLocation().equalsIgnoreCase(location)) {
                         hospitals.add(hospital);
                     }
@@ -155,8 +154,9 @@ public class Beds extends Fragment implements HospitalAdapter.onHospitalClick {
 
     @Override
     public void onHospitalClick(int position) {
-        binding = HospitalRecyclerLayoutBinding.inflate(getLayoutInflater());
+
         //do things when the Recycler view is clicked
+        //send all the hospital data to Hospital Dashboard
         HospitalModel hospitalModel = hospitals.get(position);
         Intent intent = new Intent(getContext(), HospitalDashboard.class);
         intent.putExtra("name", hospitalModel.getHospitalName());
@@ -169,6 +169,7 @@ public class Beds extends Fragment implements HospitalAdapter.onHospitalClick {
         intent.putExtra("acceptingPatients", (hospitalModel.getAcceptingPatients() ? "Yes" : "No"));
         intent.putExtra("icuAvailable",(hospitalModel.getIcuAvailable() + ""));
         intent.putExtra("ventilatorAvailable",(hospitalModel.getVentilatorAvailable() + ""));
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

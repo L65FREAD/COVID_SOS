@@ -9,6 +9,9 @@ import androidx.core.app.NotificationManagerCompat;
 
 import org.pasaacademy.COVID_SOS.R;
 
+/**
+ * Handles the notification for the reminder to update the data
+ */
 public class NotificationManager extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {

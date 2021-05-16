@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import org.pasaacademy.COVID_SOS.databinding.ActivityLoginScreenBinding;
 
+import java.util.Objects;
+
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 
 public class LoginScreen extends AppCompatActivity {
@@ -25,17 +27,19 @@ public class LoginScreen extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         //hiding the action bar
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         //go to the main screen(normal user)
         binding.continueToApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (checkConnection()) {
+                    //Intent to go to the Select location activity
                     Intent intent = new Intent(getApplicationContext(), SelectLocation.class);
                     intent.setFlags(FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 } else {
+                    //no connection identified
                     Toast.makeText(LoginScreen.this, "Internet Connection Required", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -46,12 +50,13 @@ public class LoginScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkConnection()) {
+                    //Intent to go to the Hospital Login activity
                     Intent intent = new Intent(getApplicationContext(), VolunteerLogin.class);
-
                     intent.setFlags(FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
 
                 } else {
+                    //no connection identified
                     Toast.makeText(LoginScreen.this, "Internet Connection Required", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -59,6 +64,7 @@ public class LoginScreen extends AppCompatActivity {
 
     }
 
+    //Checks whether a device is connected to internet or not
     private boolean checkConnection() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();

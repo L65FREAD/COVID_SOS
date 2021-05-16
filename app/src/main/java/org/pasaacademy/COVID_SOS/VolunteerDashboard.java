@@ -3,6 +3,7 @@ package org.pasaacademy.COVID_SOS;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -45,6 +46,8 @@ public class VolunteerDashboard extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        //put the values on the dropdown menu
         String[] numbers = getResources().getStringArray(R.array.numbers);
         String[] bool = getResources().getStringArray(R.array.bool);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getApplication(), R.layout.dropdownitem, numbers);
@@ -66,10 +69,12 @@ public class VolunteerDashboard extends AppCompatActivity {
 
         reference = FirebaseDatabase.getInstance().getReference("Hospitals");
 
+        //getting the items passed through the intent
         String name = getIntent().getStringExtra("name");
         hospitalName = getIntent().getIntExtra("position", 0);
         String lastUpdate = getIntent().getStringExtra("time");
-        DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+
+        @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
         Date d = null;
         try {
             d = dateFormat.parse(lastUpdate);
@@ -78,14 +83,13 @@ public class VolunteerDashboard extends AppCompatActivity {
         }
         long timeMilli = d.getTime();
 
-
         binding.hospitalName.setText(name);
 
         binding.submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (timeMilli + 10000 >= System.currentTimeMillis()) {
+                if (timeMilli + ((long) 2 * (3.6e+6)) >= System.currentTimeMillis()) {
 
                     //update the data
                     availableBeds = binding.availableBeds.getText().toString();

@@ -100,26 +100,30 @@ public class Hotline extends Fragment implements HotlineNumbersAdapter.OnContact
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //recycler
+        //hooking the recycler view
         RecyclerView recyclerView = view.findViewById(R.id.hotlineNumbers);
 
-
+        //hooking rest of the required variables
         contacts = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
 
+        //creating and assigning the adapter to the recycler view
         adapter = new HotlineNumbersAdapter(getActivity(), contacts, this);
         recyclerView.setAdapter(adapter);
 
+        //get the database and assign the values to the array list created
         database.getReference().child("Contacts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 contacts.clear();
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     Contact contact = snapshot1.getValue(Contact.class);
+                    //adding the contacts only if it is of the same location
                     if (contact.getLocation().equalsIgnoreCase(location)) {
                         contacts.add(contact);
                     }
                 }
+                //notifies the adapter that the data has changed so the view can be updated
                 adapter.notifyDataSetChanged();
             }
 
@@ -131,6 +135,7 @@ public class Hotline extends Fragment implements HotlineNumbersAdapter.OnContact
 
     }
 
+    //Detects the click on the recycler view, position of the item is passed as parameter
     @Override
     public void onContactClick(int position) {
         Contact contact = contacts.get(position);
@@ -138,6 +143,7 @@ public class Hotline extends Fragment implements HotlineNumbersAdapter.OnContact
         makePhoneCall(phoneNumber);
     }
 
+    //request permission for phone call and call onRequestPermissionResult if permission denied
     public void makePhoneCall(String number) {
         if (ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -149,6 +155,7 @@ public class Hotline extends Fragment implements HotlineNumbersAdapter.OnContact
         }
     }
 
+    //asks manual permission for making the phone call
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CALL) {
